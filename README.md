@@ -1,1 +1,1 @@
-# Algorithm-Specialization-Stanord-Coursera
+# Algorithm-Specialization-Stanford-Coursera
