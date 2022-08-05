@@ -277,9 +277,9 @@ class Jobs:
         pass
 
 class MST_heap:
-    def __init__(self,filename=None,debug=False):
+    def __init__(self,url=None,debug=False):
         self.debug = debug
-        #filename = wget.download(url)
+        filename = wget.download(url)
         f = open(filename, 'r')
         self.lines = f.readlines()
         self.n_nodes,self.n_edges = tuple(map(int,self.lines[0].split()))
@@ -335,11 +335,23 @@ class MST_heap:
             else:
                 cost = float('inf')
                 
+            self.node_index_dict[node]= self.heap.n_elements
+            self.index_node_dict[self.heap.n_elements] = node
+            
+            swapList = self.heap.insert(cost)
+            
+            if swapList:
+                for i,j in swapList:
+                    self.index_node_dict[i],self.index_node_dict[j] = self.index_node_dict[j],self.index_node_dict[i]
+                    self.node_index_dict[self.index_node_dict[i]] = i
+                    self.node_index_dict[self.index_node_dict[j]] = j
+                
+            '''   
             if cost in self.cost_node_dict:
                 self.cost_node_dict[cost].append(node)
             else:
                 self.cost_node_dict[cost]=[node]
-                
+            
             self.heap.insert(cost)
             
         for i in range(self.heap.n_elements):
@@ -353,6 +365,7 @@ class MST_heap:
                     self.index_node_dict[i] = node
                     break
         print(len(list(self.node_index_dict.keys())),self.n_nodes)
+        '''
                 
         if self.debug:
             print(self.heap.heap)
@@ -537,7 +550,7 @@ if __name__ == "__main__":
     J = Jobs(filename ="jobs.txt",debug = debug)
     print(J.execute(score_number=1))
     print(J.execute(score_number=2))
-    M = MST_list(url = "https://d3c33hcgiwev3.cloudfront.net/_d4f3531eac1d289525141e95a2fea52f_edges.txt?Expires=1659052800&Signature=NlE9jRyY3WhpkcEwlcNtxH9pBMtlOLzSpeCv3Y5M16TtIzEu74lP1NVTdjCklyM0YYosVzl6AJL-ttfk5vppoSTwDS4mhEAbVARRYCiq6-ecK1a7dceZL007qSfIpBFO4l5OYGsaZH88wZzgv-~217qbhk6LfEEkNDuVGwcn3T0_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A"  ,debug = False)
+    M = MST_heap(url = "https://d3c33hcgiwev3.cloudfront.net/_d4f3531eac1d289525141e95a2fea52f_edges.txt?Expires=1659052800&Signature=NlE9jRyY3WhpkcEwlcNtxH9pBMtlOLzSpeCv3Y5M16TtIzEu74lP1NVTdjCklyM0YYosVzl6AJL-ttfk5vppoSTwDS4mhEAbVARRYCiq6-ecK1a7dceZL007qSfIpBFO4l5OYGsaZH88wZzgv-~217qbhk6LfEEkNDuVGwcn3T0_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A"  ,debug = False)
     print(M.execute())
 
     
